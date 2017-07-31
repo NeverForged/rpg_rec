@@ -25,11 +25,10 @@ class Scraper(object):
         time.sleep(random.randint(0,2))
         # try:
         cursor = self.docs.find({}).sort('cust_id', pymongo.DESCENDING).limit(1)
+        last = 0
         for doc in cursor:
             last = int(doc['cust_id'])
             print(doc['cust_id'])
-        # except:
-        #     last = 0
 
         # start a loop for the scraping...
         for cust_id in xrange(last + 1, 1368860):  # my ID.  Not including self
