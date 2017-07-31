@@ -32,7 +32,7 @@ class Scraper(object):
         #     last = 0
 
         # start a loop for the scraping...
-        for cust_id in range(last + 1, 1368860):  # my ID.  Not including self
+        for cust_id in xrange(last + 1, 1368860):  # my ID.  Not including self
             lst = self.get_reviews(cust_id)
             for tup in lst:
                 if len(lst) > 0:
