@@ -94,7 +94,10 @@ class Scraper(object):
                                  if a in string.printable]))
         ret = []
         for i, prod in enumerate(lst_l):
-            ret.append((prod, self.get_rulesystem(prod), 'lstr[i]'))
+            try:
+                ret.append((prod, self.get_rulesystem(prod), 'lstr[i]'))
+            except:
+                pass
         return ret
 
 if __name__ == '__main__':
