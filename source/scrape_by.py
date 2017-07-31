@@ -1,9 +1,9 @@
-import html
 import time
 import string
 import random
 import pymongo
 import requests
+import HTMLParser
 from bs4 import BeautifulSoup
 
 
@@ -54,10 +54,7 @@ class Scraper(object):
             soup = BeautifulSoup(r.content, 'html.parser')
             tags  = soup.find('ul', {'class':'rules-system-list'})
             # get it, clean it, and assign it
-            try:
-                ret = html.unescape(tags.get_text())
-            except:
-                ret = tags
+            ret = HTMLParser.HTMLParser().unescape(tags.get_text())
             self.p2gs[n_prod] = ret
         return ret
 
