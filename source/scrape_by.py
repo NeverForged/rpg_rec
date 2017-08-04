@@ -22,7 +22,7 @@ class Scraper(object):
     def scrape(self):
         '''
         '''
-        time.sleep(random.randint(0,2))
+        time.sleep(random.randint(0,2)/5.0)
         # try:
         cursor = self.docs.find({}).sort('cust_id', pymongo.DESCENDING).limit(1)
         last = 0
