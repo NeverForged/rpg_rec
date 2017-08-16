@@ -22,7 +22,6 @@ class Scraper(object):
     def scrape(self):
         '''
         '''
-        time.sleep(random.randint(0,2)/5.0)
         # try:
         cursor = self.docs.find({}).sort('cust_id', pymongo.DESCENDING).limit(1)
         last = 0
@@ -35,6 +34,7 @@ class Scraper(object):
             lst = self.get_reviews(cust_id)
             for tup in lst:
                 if len(lst) > 0:
+                    time.sleep(random.randint(0,1)/100.0)
                     print(cust_id)
                 # Store the document in MongoDB
                 self.docs.insert_one({'cust_id': cust_id,
