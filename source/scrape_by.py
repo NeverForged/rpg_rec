@@ -31,9 +31,9 @@ class Scraper(object):
 
         # start a loop for the scraping...
         for cust_id in xrange(last + 1, 1368860):  # my ID.  Not including self
-            if i%2 == 0
+            if i%2 == 0:
                 print 'X \r',
-            else
+            else:
                 print '| \r',
             lst = self.get_reviews(cust_id)
             for tup in lst:
