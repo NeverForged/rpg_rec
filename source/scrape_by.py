@@ -31,7 +31,7 @@ class Scraper(object):
 
         # start a loop for the scraping...
         for cust_id in xrange(last + 1, 1368860):  # my ID.  Not including self
-            if i%2 == 0:
+            if cust_id % 2 == 0:
                 print 'X \r',
             else:
                 print '| \r',
