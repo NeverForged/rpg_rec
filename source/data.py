@@ -35,11 +35,9 @@ class Data(object):
                 try:
                     self.user[u][s] = self.user[u][s] + 1
                 except:
-                    print 'a'
                     try:
                         self.user[u][s] = 1
                     except:
-                        print 'b'
                         self.user[u] = {}
                         self.user[u][s] = 1
             # save it in case we need it later...
@@ -59,7 +57,7 @@ class Data(object):
         This gives a number of times the user has rated a product in the given
         system.
         '''
-        out = csv.writer(open("../data/ratings.csv","wb"), delimiter=',')
+        out = csv.writer(open("../data/ratings.csv","wb"), delimiter='|')
         self.user_dict()
         for cid in self.user.keys():
             for sys in self.user[cid].keys():
