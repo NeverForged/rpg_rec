@@ -30,8 +30,8 @@ class Data(object):
             cursor = self.docs.find({}).sort('cust_id')
             for doc in cursor:
                 u = doc['cust_id']
-                s = doc['system']
-                # should be a zero unless we have an answer...
+                s = self.system[doc['system']]
+                # should] be a zero unless we have an answer...
                 try:
                     self.user[u][s] = self.user[u][s] + 1
                 except:
@@ -48,16 +48,40 @@ class Data(object):
     def dd(self):
         return defaultdict(int)
 
+
+    def system_dictionary(self):
+        '''
+        make numbers out of the system names, add them to a dictionary...
+        '''
+        try:
+            self.system = pickle.load(open('../dictionary/sys.pickle', 'rb'))
+        except:
+            self.system = {}
+            col = 0
+            cursor = self.docs.find({}).sort('system')
+            for doc in cursor:
+                s = doc['system']
+                try:
+                    a = self.system[s]
+                except:
+                    self.system[s] = col
+                    col += 1
+            # save it in case we need it later...
+            with open('../dictionary/sys.pickle', 'wb') as handle:
+                    pickle.dump(self.system, handle,
+                                protocol=pickle.HIGHEST_PROTOCOL)
+
     def make_csv(self):
         '''
         Use the above dictionary to make a csv with the following format:
 
-            cust_id | system name | ratings(#)
+            cust_id | system num | ratings(#)
 
         This gives a number of times the user has rated a product in the given
         system.
         '''
         out = csv.writer(open("../data/ratings.csv","wb"), delimiter='|')
+        self.system_dictionary()
         self.user_dict()
         for cid in self.user.keys():
             for sys in self.user[cid].keys():
