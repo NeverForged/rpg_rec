@@ -5,10 +5,7 @@ from pyspark.mllib.recommendation import ALS
 
 # create spark session
 # use local[7] on ec2 instance
-spark = ps.sql.SparkSession.builder \
-          .master('local[7]')  \
-          .appName('rpg_rec') \
-          .getOrCreate() \
+spark = ps.sql.SparkSession.builder.master('local[7]').appName('rpgrec').getOrCreate()
 
 # load in the ratings data
 df = spark.read.csv('../data/ratings.csv',
