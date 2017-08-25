@@ -19,9 +19,12 @@ Seems daunting, but I made a few assumptions:
 
 So my goal is to use the number of reviews of a given system's products as an implicit rating of the game itself.  Clearly normalization must be done to justify this.
 
-## Spark Attempt
+## First Spark Attempt
 My first instinct was to use [Spark ALS](https://github.com/NeverForged/rpg_rec/blob/master/source/SparkRPGRecommender.ipynb). This came out okay (not great), but I noticed two things:
 1. I don't know enough about recommenders to set the *regularization_parameters* (yet) and
 2. This was running on my Laptop locally... apparently 17,688 data points is not enough to justify using Spark on an EC2 as I originally thought I would have to do.
 
 ## Building A Recommender From Scratch
+To gain a better understanding of how recommendation systems work, I decided to [build one from scratch](https://github.com/NeverForged/rpg_rec/blob/master/source/Recommender.ipynb).  This uses collaborative filtering and cosine similarity to build a recommendation model.  Removing 20% of my users at random and testing on them gave an RSME of 0.182 and a maximum error of 5... not great, but not terrible.  Of course, none of the fun regularization stuff was used (yet), so still not expecting great things.
+
+## Non-Negative Matrix Factorization
