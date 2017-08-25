@@ -18,3 +18,10 @@ Seems daunting, but I made a few assumptions:
 * A negative review of a *product* is still an endorsement of a *system*; in fact, one could argue that you wouldn't care about a bad *product* if you didn't like the system.  This assumption improves with higher numbers of reviews (since one bad product clearly did not turn them off of the system).
 
 So my goal is to use the number of reviews of a given system's products as an implicit rating of the game itself.  Clearly normalization must be done to justify this.
+
+## Spark Attempt
+My first instinct was to use [Spark ALS](https://github.com/NeverForged/rpg_rec/blob/master/source/SparkRPGRecommender.ipynb). This came out okay (not great), but I noticed two things:
+1. I don't know enough about recommenders to set the *regularization_parameters* (yet) and
+2. This was running on my Laptop locally... apparently 17,688 data points is not enough to justify using Spark on an EC2 as I originally thought I would have to do.
+
+## Building A Recommender From Scratch
