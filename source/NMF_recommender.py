@@ -197,7 +197,7 @@ if __name__ == '__main__':
     for k in ks:
         for l1 in ls:
             for l2 in ls:
-                nmf = NMF_recommender(k=k, max_iter=6, thresh=0.001, l1=l1,
+                nmf = NMF_recommender(k=k, max_iter=24, thresh=0.1, l1=l1,
                                       l2=l2, verbose=False)
                 nmf.fit(train_utility_matrix)
                 rmse = nmf.get_rmse(utility_matrix)
