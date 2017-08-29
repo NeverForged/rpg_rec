@@ -188,8 +188,8 @@ if __name__ == '__main__':
         print utility_matrix[tup], train_utility_matrix[tup]
 
     # Grid search...
-    ks = [a for a in range(4,32,1)]
-    ls = [0.1*a for a in range(1, 11, 1)]
+    ks = [a for a in range(4,36,4)]
+    ls = [0.25*a for a in range(1, 5, 1)]
     best_k = 0
     best_l1 = 0
     best_l2 = 0
