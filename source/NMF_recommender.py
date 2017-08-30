@@ -24,8 +24,7 @@ class NMF_recommender(object):
         l2 - lamba_2
     '''
 
-    def __init__(self, k, max_iter=100, thresh=0.0001, l1=0.1, l2=0.1,
-                 verbose=False):
+    def __init__(self, k, max_iter=100, thresh=0.0001, l1=0.1, l2=0.1, verbose=False):
         '''
         Initializer.  See class for details.
         '''
@@ -79,19 +78,21 @@ class NMF_recommender(object):
         #cost function...
         Q = self.V - self.mu - self.b_matrix
         self.cost = (np.linalg.norm(Q - self.W.dot(self.H)) +
-                         self.l1*(np.linalg.norm(self.W) +
-                         np.linalg.norm(self.H)) +
+                         self.l1*(np.linalg.norm(self.W) + np.linalg.norm(self.H)) +
                          self.l2*(self.b_star.dot(self.b_star) + self.b_prime.dot(self.b_prime)))
         if self.verbose:
             print 'Cost starts at: {}'.format(self.cost)
         n = 0
         old_cost = self.cost + 2 * self.thresh
+        I = np.identity(k)
         while (n < self.iter) and (abs(old_cost - self.cost) > self.thresh):
             if n % 2 == 0:
-                self.H = np.linalg.lstsq(self.W, self.V)[0]
+                self.H = np.linalg.lstsq(self.W + self.l1,
+                                         Q + self.l2*self.b_matrix)[0]
                 self.H[self.H < 0] = 0
             else:
-                self.W = np.linalg.lstsq(self.H.T, self.V.T)[0].T
+                self.W = np.linalg.lstsq(self.H.T + self.l1,
+                                         (Q + self.l2*self.b_matrix).T)[0].T
                 self.W[self.W < 0] = 0
             old_cost = self.cost
             self.cost = (np.linalg.norm(Q - self.W.dot(self.H)) +
@@ -100,9 +101,7 @@ class NMF_recommender(object):
                          self.l2*(self.b_star.dot(self.b_star) + self.b_prime.dot(self.b_prime)))
             n +=1
             if self.verbose:
-                print "Iteration {}: Cost Difference = {}".format(n,
-                                                                  abs(old_cost -
-                                                                  self.cost))
+                print "Iteration {}: Cost Difference = {}".format(n, abs(old_cost - self.cost))
         return self.W, self.H
 
     def predict(self):
@@ -119,8 +118,7 @@ class NMF_recommender(object):
          Fit function for the recommender system.
         Parameters:
             v - a list of tuples describing how user rated items,
-                format [(item_1, rating_1), (item_2, rating_2), ...,
-                (item_n, raing_n)]
+                format [(item_1, rating_1), (item_2, rating_2), ..., (item_n, raing_n)]
 
         Attributes:
             ratings - The returned ratings for all the included users
@@ -134,11 +132,10 @@ class NMF_recommender(object):
 
     def get_rmse(self, X_full):
         '''
-        Assumes a training matrix with missing values was used, checks the
-        values that are in X_full but not in self.V and calculates the RMSE.
+        Assumes a training matrix with missing values was used, checks the values that are in
+        X_full but not in self.V and calculates the RMSE.
         Parameters:
-            X_full - the utility-matrix that vaules were removed from to get X
-                     in our fit
+            X_full - the utility-matrix that vaules were removed from to get X in our fit
 
         Attributes:
             Xf - the full utility matric
@@ -197,7 +194,7 @@ if __name__ == '__main__':
     for k in ks:
         for l1 in ls:
             for l2 in ls:
-                nmf = NMF_recommender(k=k, max_iter=24, thresh=0.1, l1=l1,
+                nmf = NMF_recommender(k=k, max_iter=51, thresh=0.1, l1=l1,
                                       l2=l2, verbose=False)
                 nmf.fit(train_utility_matrix)
                 rmse = nmf.get_rmse(utility_matrix)
