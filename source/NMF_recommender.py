@@ -77,6 +77,7 @@ class NMF_recommender(object):
             print 'Getting cost...'
         #cost function...
         Q = self.V - self.mu - self.b_matrix
+        R = Q + self.l2*(self.b_star.dot(self.b_star) + self.b_prime.dot(self.b_prime))
         self.cost = (np.linalg.norm(Q - self.W.dot(self.H)) +
                          self.l1*(np.linalg.norm(self.W) + np.linalg.norm(self.H)) +
                          self.l2*(self.b_star.dot(self.b_star) + self.b_prime.dot(self.b_prime)))
@@ -87,12 +88,10 @@ class NMF_recommender(object):
         I = np.identity(k)
         while (n < self.iter) and (abs(old_cost - self.cost) > self.thresh):
             if n % 2 == 0:
-                self.H = np.linalg.lstsq(self.W + self.l1,
-                                         Q + self.l2*self.b_matrix)[0]
+                self.H = np.linalg.lstsq(self.W + self.l1, R)[0]
                 self.H[self.H < 0] = 0
             else:
-                self.W = np.linalg.lstsq(self.H.T + self.l1,
-                                         (Q + self.l2*self.b_matrix).T)[0].T
+                self.W = np.linalg.lstsq(self.H.T + self.l1, R.T)[0].T
                 self.W[self.W < 0] = 0
             old_cost = self.cost
             self.cost = (np.linalg.norm(Q - self.W.dot(self.H)) +
@@ -194,8 +193,8 @@ if __name__ == '__main__':
     for k in ks:
         for l1 in ls:
             for l2 in ls:
-                nmf = NMF_recommender(k=k, max_iter=51, thresh=1.0, l1=l1,
-                                      l2=l2, verbose=False)
+                nmf = NMF_recommender(k=k, max_iter=21, thresh=1.0, l1=l1,
+                                      l2=l2, verbose=True)
                 nmf.fit(train_utility_matrix)
                 rmse = nmf.get_rmse(utility_matrix)
                 if rmse < best_rmse:
@@ -203,7 +202,7 @@ if __name__ == '__main__':
                     best_k = k
                     best_l1 = l1
                     best_l2 = l2
-                print('RMSE = {} for k={}, l1={}, l2={}'.format(rmse, k, l1,
-                                                                l2))
+                print('RMSE = {} for k={}, l1={}, l2={}'.format(rmse,
+                                                                k, l1, l2))
     print()
     print('Best params are k={}, l1={}, l2={}'.format(best_k, best_l1, best_l2))
