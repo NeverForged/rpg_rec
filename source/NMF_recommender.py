@@ -185,8 +185,8 @@ if __name__ == '__main__':
         print utility_matrix[tup], train_utility_matrix[tup]
 
     # Grid search...
-    ks = [a for a in range(4,36,4)]
-    ls = [0.25*a for a in range(1, 5, 1)]
+    ks = [a for a in range(5,35,5)]
+    ls = [0.5*a for a in range(1, 5, 1)]
     best_k = 0
     best_l1 = 0
     best_l2 = 0
@@ -194,7 +194,7 @@ if __name__ == '__main__':
     for k in ks:
         for l1 in ls:
             for l2 in ls:
-                nmf = NMF_recommender(k=k, max_iter=51, thresh=0.1, l1=l1,
+                nmf = NMF_recommender(k=k, max_iter=51, thresh=1.0, l1=l1,
                                       l2=l2, verbose=False)
                 nmf.fit(train_utility_matrix)
                 rmse = nmf.get_rmse(utility_matrix)
